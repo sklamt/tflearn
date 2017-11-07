@@ -239,7 +239,7 @@ class Trainer(object):
         # Remove excluded train_ops
         if excl_trainops:
             self.train_ops = list(filter(lambda a: a not in excl_trainops, self.train_ops))
-	    
+
         # shuffle is an override for simplicty, it will overrides every
         # training op batch shuffling
         if isinstance(shuffle_all, bool):
@@ -264,12 +264,12 @@ class Trainer(object):
                         self.tensorboard_dir + run_id, self.session.graph_def)
             utils.fix_saver(obj_lists)
 
-            feed_dicts = to_list(feed_dicts)
-            for d in feed_dicts: standarize_dict(d)
-            val_feed_dicts = to_list(val_feed_dicts)
-            if val_feed_dicts:
-                [standarize_dict(d) for d in val_feed_dicts if not
-                 isinstance(d, float)]
+            #feed_dicts = to_list(feed_dicts)
+            #for d in feed_dicts: standarize_dict(d)
+            #val_feed_dicts = to_list(val_feed_dicts)
+            #if val_feed_dicts:
+                #[standarize_dict(d) for d in val_feed_dicts if not
+                # isinstance(d, float)]
 
             termlogger = tf_callbacks.TermLogger()
             modelsaver = tf_callbacks.ModelSaver(self.save,
@@ -280,9 +280,9 @@ class Trainer(object):
                                               snapshot_epoch)
 
             for i, train_op in enumerate(self.train_ops):
-                vd = val_feed_dicts[i] if val_feed_dicts else None
+                vd = val_feed_dicts.__next__() if val_feed_dicts else None
                 # Prepare all train_ops for fitting
-                train_op.initialize_fit(feed_dicts[i], vd, dprep_dict,
+                train_op.initialize_fit(feed_dicts.__next__(), vd, dprep_dict,
                                         daug_dict, show_metric,
                                         self.summ_writer, self.coord)
 
